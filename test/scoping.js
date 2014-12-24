@@ -4,7 +4,7 @@ describe('scoping', function () {
         request;
 
     request = function (callback) {
-      return callback();
+      return callback.call(this);
     };
 
     function Module () {
@@ -16,7 +16,9 @@ describe('scoping', function () {
     };
 
     Module.prototype.req = function() {
-      return request(this.method);
+      
+      //return request(this.method.bind(this)); // bind should work but looks like test is not able to defin it.
+      return request.call(this,this.method);
     };
 
     expect(mod.req()).toBe('bar');
